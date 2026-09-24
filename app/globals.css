@@ -8,8 +8,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-meutas);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -19,8 +18,169 @@
   }
 }
 
+html {
+  /* Anchor targets clear the fixed navbar. */
+  scroll-padding-top: 4rem;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-meutas), Arial, Helvetica, sans-serif;
+  font-weight: 300;
+}
+
+/* ---------------------------------------------------------------------------
+   Shared motion + surface primitives used across the page sections.
+   --------------------------------------------------------------------------- */
+
+:root {
+  /* Matches ACCENT in components/header-scene.tsx, so the 3D header and the
+     rest of the page pull from one colour. */
+  --accent: #8b7fd4;
+  --surface: color-mix(in oklab, var(--foreground) 4%, transparent);
+  --hairline: color-mix(in oklab, var(--foreground) 12%, transparent);
+}
+
+@theme inline {
+  --color-accent: var(--accent);
+  --color-surface: var(--surface);
+  --color-hairline: var(--hairline);
+}
+
+/* Zero-JS scroll progress bar. Falls back to invisible where scroll-driven
+   animations aren't supported. */
+@keyframes grow-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.scroll-progress {
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+}
+
+@supports (animation-timeline: scroll()) {
+  .scroll-progress {
+    animation: grow-progress linear forwards;
+    animation-timeline: scroll(root block);
+  }
+}
+
+/* Scroll reveal. The transition is driven by a data attribute set by an
+   IntersectionObserver, so nothing animates until it is actually on screen. */
+.reveal {
+  opacity: 0;
+  transform: translateY(1.25rem);
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal[data-visible="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Infinite marquee. The track holds the item list twice, so translating it
+   exactly -50% lands on a seamless loop point. */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee {
+  /* Fades both ends into the page instead of cutting off mid-tile. */
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 12%,
+    black 88%,
+    transparent
+  );
+}
+
+.marquee-track {
+  animation: marquee var(--marquee-duration, 46s) linear infinite;
+  width: max-content;
+}
+
+.marquee-track[data-direction="reverse"] {
+  animation-direction: reverse;
+}
+
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* Cursor spotlight. Position comes from custom properties written by a pointer
+   handler, so the highlight itself costs no re-render. */
+.spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  background: radial-gradient(
+    26rem circle at var(--spot-x, 50%) var(--spot-y, 50%),
+    color-mix(in oklab, var(--card-accent, var(--accent)) 20%, transparent),
+    transparent 68%
+  );
+}
+
+.spotlight:hover::before {
+  opacity: 1;
+}
+
+/* Project media: portrait screenshots fanned out as handsets. --i is a phone's
+   signed offset from the middle of the fan and --depth its distance, so a
+   single pair of rules covers both the two- and three-shot layouts. */
+.phone-fan-item {
+  /* The leading -50%/-50% is what centres the phone in the frame; everything
+     after it is the fan itself. */
+  transform: translate(-50%, -50%)
+    translateX(calc(var(--i) * var(--spread))) rotate(calc(var(--i) * 7deg))
+    scale(calc(1 - var(--depth) * 0.11));
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Hover opens the fan: the outer phones step out and lift slightly, while the
+   middle one, at depth 0, only comes forward. */
+.spotlight:hover .phone-fan-item {
+  transform: translate(-50%, -50%)
+    translateX(calc(var(--i) * (var(--spread) + 14%)))
+    translateY(calc(var(--depth) * -3%)) rotate(calc(var(--i) * 9deg))
+    scale(calc(1.03 - var(--depth) * 0.11));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .marquee-track {
+    animation: none;
+  }
+
+  .scroll-progress {
+    animation: none;
+  }
+
+  .phone-fan-item,
+  .spotlight:hover .phone-fan-item {
+    transition: none;
+  }
 }
