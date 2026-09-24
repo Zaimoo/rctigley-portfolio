@@ -6,6 +6,7 @@ import Reveal from "@/components/reveal";
 import SkillsMarquee from "@/components/skills-marquee";
 import ProjectRow from "@/components/project-row";
 import { about, education, experience, projects } from "@/lib/content";
+import { profileJsonLd } from "@/lib/site";
 
 function SectionLabel({ children }: { children: ReactNode }) {
   return (
@@ -19,6 +20,12 @@ function SectionLabel({ children }: { children: ReactNode }) {
 export default function Home() {
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(profileJsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       <section id="header" className="relative min-h-screen">
         <HeaderScene />
 
@@ -44,9 +51,9 @@ export default function Home() {
           <div className="lg:sticky lg:top-28 lg:self-start">
             <Reveal>
               <SectionLabel>About</SectionLabel>
-              <p className="mt-6 text-pretty text-2xl font-bold leading-snug tracking-tight sm:text-3xl">
+              <h2 className="mt-6 text-pretty text-2xl font-bold leading-snug tracking-tight sm:text-3xl">
                 {about.lead}
-              </p>
+              </h2>
             </Reveal>
           </div>
 

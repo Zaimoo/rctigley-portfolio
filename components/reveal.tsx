@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 
 /**
  * Fades its children up the first time they scroll into view.
@@ -22,16 +22,20 @@ export default function Reveal({
   as?: "div" | "li" | "section" | "article";
 }) {
   const ref = useRef<HTMLElement>(null);
-  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const node = ref.current;
-    if (!node) return;
+    if (!node || !("IntersectionObserver" in window)) return;
+
+    // Server HTML is visible. Only animate content below the viewport once
+    // JavaScript is ready; never hide content already being read.
+    if (node.getBoundingClientRect().top < window.innerHeight) return;
+    node.dataset.visible = "false";
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return;
-        setVisible(true);
+        node.dataset.visible = "true";
         observer.disconnect();
       },
       // Fire slightly before the element reaches the bottom edge, so the
@@ -40,14 +44,16 @@ export default function Reveal({
     );
 
     observer.observe(node);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      delete node.dataset.visible;
+    };
   }, []);
 
   return (
     <Tag
       ref={ref as never}
       className={`reveal ${className}`}
-      data-visible={visible}
       style={{ "--reveal-delay": `${delay}ms` } as React.CSSProperties}
     >
       {children}
