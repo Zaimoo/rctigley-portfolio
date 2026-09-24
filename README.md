@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Cezar Portfolio
+
+Personal portfolio for Rey Cezar Tigley, built with Next.js, React, TypeScript,
+Tailwind CSS, and React Three Fiber.
+
+## Requirements
+
+- Node.js 20 or newer
+- npm
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies and start the development server:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Available Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start the development server |
+| `npm run build` | Create a production build |
+| `npm run start` | Serve the production build |
+| `npm run lint` | Run ESLint |
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+- `app/` - application layout, page, fonts, and global styles
+- `components/` - reusable portfolio sections and project presentation
+- `lib/content.ts` - portfolio copy, project metadata, skills, experience, and contact details
+- `public/images/projects/` - project screenshots and other static assets
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Updating Content
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Most portfolio content can be edited in `lib/content.ts`. Project images should
+be placed in `public/images/projects/` and referenced with a path beginning with
+`/images/projects/`.
 
-## Deploy on Vercel
+Use `shots` for portrait mobile screenshots. Use `media` for a single website
+image or other landscape project asset. Projects without an image can use the
+optional `placeholder` field to display a custom message.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Production Check
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Run the production checks before deploying:
+
+```bash
+npm run lint
+npm run build
+```
+
+The application can be deployed to any platform that supports Next.js. Vercel
+is the simplest option for a standard Next.js deployment.
