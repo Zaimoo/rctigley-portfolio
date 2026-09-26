@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import ContactBlock from "@/components/contact-block";
+import BrandMark from "@/components/brand-mark";
 import HeaderScene from "@/components/header-scene";
 import Reveal from "@/components/reveal";
 import SkillsMarquee from "@/components/skills-marquee";
@@ -204,7 +205,10 @@ export default function Home() {
 
       <footer className="border-t border-hairline">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-10 text-xs text-foreground/40 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} Rey Cezar Tigley</p>
+          <div className="flex items-center gap-3">
+            <BrandMark />
+            <p>© {new Date().getFullYear()} Rey Cezar Tigley</p>
+          </div>
           <p className="font-mono uppercase tracking-widest">
             Built with Next.js &amp; Three.js
           </p>

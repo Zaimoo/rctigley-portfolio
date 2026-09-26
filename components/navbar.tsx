@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import BrandMark from "@/components/brand-mark";
 
 // Split either side of the centred call to action. "Contact" is deliberately
 // absent - the button already points there.
@@ -43,12 +44,13 @@ export default function Navbar() {
       }`}
     >
       <nav
-        className="mx-auto flex min-h-16 max-w-6xl items-center justify-center gap-6 px-6 sm:gap-10"
+        className="relative mx-auto flex min-h-16 max-w-6xl items-center justify-center gap-6 px-20 sm:gap-6 lg:gap-10"
         aria-label="Main navigation"
       >
+        <BrandMark className="absolute left-4 sm:left-6" />
         {/* Equal-basis flex on both sides is what keeps the button optically
             centred even though the link labels differ in width. */}
-        <div className="hidden flex-1 items-center justify-end gap-6 sm:flex sm:gap-8">
+        <div className="hidden flex-1 items-center justify-end gap-4 sm:flex lg:gap-8">
           {leftLinks.map((link) => (
             <a key={link.href} href={link.href} className={linkClass}>
               {link.label}
@@ -63,7 +65,7 @@ export default function Navbar() {
           Let&apos;s talk
         </a>
 
-        <div className="hidden flex-1 items-center gap-6 sm:flex sm:gap-8">
+        <div className="hidden flex-1 items-center gap-4 sm:flex lg:gap-8">
           {rightLinks.map((link) => (
             <a key={link.href} href={link.href} className={linkClass}>
               {link.label}

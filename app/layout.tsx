@@ -9,6 +9,9 @@ export const metadata: Metadata = {
   title: site.title,
   description: site.description,
   authors: [{ name: site.name, url: site.url }],
+  icons: {
+    icon: [{ url: "/logo.svg", type: "image/svg+xml", sizes: "any" }],
+  },
   alternates: { canonical: "/" },
   robots: {
     index: true,
